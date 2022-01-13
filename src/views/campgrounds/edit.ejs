@@ -1,23 +1,85 @@
 <% layout('layouts/boilerplate') -%>
-<form action="/campgrounds/<%= campground.id %>?_method=PUT" method="POST">
-  <div>
-    <label for="title">タイトル</label>
-    <input
-      type="text"
-      name="campground[title]"
-      id="title"
-      value="<%= campground.title %> "
-    />
+
+<div class="row">
+  <h1 class="text-center">キャンプ場の編集</h1>
+  <div class="offset-3 col-6">
+    <form
+      action="/campgrounds/<%= campground.id %>?_method=PUT"
+      method="POST"
+      novalidate
+      class="validated-form"
+    >
+      <div class="mb-3">
+        <label for="title" class="form-label">タイトル</label>
+        <input
+          type="text"
+          name="campground[title]"
+          id="title"
+          class="form-control"
+          value="<%= campground.title %>"
+          required
+        />
+        <div class="valid-feedback">OK!</div>
+      </div>
+      <div class="mb-3">
+        <label for="location" class="form-label">場所</label>
+        <input
+          type="text"
+          name="campground[location]"
+          id="location"
+          class="form-control"
+          value="<%= campground.location %>"
+          required
+        />
+        <div class="valid-feedback">OK!</div>
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">画像URL</label>
+        <input
+          type="text"
+          name="campground[image]"
+          id="image"
+          class="form-control"
+          value="<%= campground.image %>"
+          required
+        />
+        <div class="valid-feedback">OK!</div>
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">価格</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="price-label">@</span>
+          <input
+            type="number"
+            id="price"
+            class="form-control"
+            placeholder="0"
+            aria-label="Price"
+            aria-describedby="price-label"
+            name="campground[price]"
+            value="<%= campground.price %>"
+            required
+          />
+          <div class="valid-feedback">OK!</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">説明</label>
+        <textarea
+          type="text"
+          name="campground[description]"
+          id="description"
+          class="form-control"
+          required
+        >
+<%= campground.description %>
+        </textarea>
+        <div class="valid-feedback">OK!</div>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-info">登録</button>
+      </div>
+    </form>
+    <a href="/campgrounds">一覧へ戻る</a>
   </div>
-  <div>
-    <label for="locations">場所</label>
-    <input
-      type="text"
-      name="campground[location]"
-      id="location"
-      value="<%= campground.location %> "
-    />
-  </div>
-  <button>登録</button>
-</form>
-<a href="/campgrounds">一覧へ戻る</a>
+</div>

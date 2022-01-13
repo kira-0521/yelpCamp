@@ -4,7 +4,7 @@ import { CampgroundType } from '../types/campground'
 const campgroundSchema = new Schema<CampgroundType>({
   title: String,
   image: String,
-  price: String,
+  price: Number,
   description: String,
   location: String,
 })

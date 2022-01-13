@@ -1,8 +1,26 @@
 <% layout('layouts/boilerplate') -%>
 <h1>キャンプ場</h1>
-<a href="/campgrounds/new">新規登録</a>
-<ul>
-  <% campgrounds.map((c) => { %>
-  <li><a href="/campgrounds/<%= c._id %>"><%= c.title %></a></li>
-  <% }) %>
-</ul>
+<div>
+  <a href="/campgrounds/new">新規登録</a>
+</div>
+<% campgrounds.map((c) => { %>
+<div class="card mb-3">
+  <div class="row">
+    <div class="col-md-4">
+      <img class="img-fluid" src="<%= c.image %>" />
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <div class="card-title"><%= c.title %></div>
+        <p class="card-text"><%= c.description %></p>
+        <p class="card-text">
+          <small class="text-muted"><%= c.location %></small>
+        </p>
+        <a href="/campgrounds/<%= c._id %>" class="btn btn-primary"
+          ><%= c.title %>の詳細</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<% }) %>

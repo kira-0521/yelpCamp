@@ -1,12 +1,33 @@
 <% layout('layouts/boilerplate') -%>
-<h1><%= campground.title %></h1>
-<h2><%= campground.location %></h2>
-<p>
-  <a href="/campgrounds/<%= campground._id %>/edit">編集</a>
-</p>
-<form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-  <button>削除</button>
-</form>
-<footer>
-  <a href="/campgrounds">戻る</a>
-</footer>
+<div class="row">
+  <div class="col-6 offset-3">
+    <div class="card mb-3">
+      <img
+        src="<%= campground.image %>"
+        class="card-img-top"
+        alt="..."
+        loading="lazy"
+      />
+      <div class="card-body">
+        <h5 class="card-title"><%= campground.title %></h5>
+        <p class="card-text"><%= campground.description %></p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><%= campground.location %></li>
+        <li class="list-group-item"><%= campground.price %>/泊</li>
+      </ul>
+      <div class="card-body">
+        <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-info"
+          >編集</a
+        >
+        <form
+          class="d-inline"
+          action="/campgrounds/<%= campground._id %>?_method=DELETE"
+          method="POST"
+        >
+          <button class="btn btn-danger">削除</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { connect } from 'mongoose'
 import { Campground } from './models/campGround'
 import { CampgroundType } from './types/campground'
 import methodOverride from 'method-override'
+import morgan from 'morgan'
 
 connect('mongodb://localhost:27017/yelp-camp', {
   useNewUrlParser: true,
@@ -24,7 +25,10 @@ const app = express()
 app.use(express.urlencoded({ extended: true }))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
+// formでGETとPOST以外を送れるようにする
 app.use(methodOverride('_method'))
+// 通信のログを出力
+app.use(morgan('tiny'))
 
 // 一覧
 app.get('/campgrounds', async (req: Request, res: Response) => {

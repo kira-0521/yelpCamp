@@ -1,6 +1,7 @@
 export interface CampgroundType {
   title: string
-  price: string
+  image: string
+  price: number
   description: string
   location: string
 }

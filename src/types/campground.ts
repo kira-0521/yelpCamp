@@ -5,3 +5,7 @@ export interface CampgroundType {
   description: string
   location: string
 }
+
+export interface ExpressErrorType extends Error {
+  statusCode: number
+}

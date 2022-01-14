@@ -3,11 +3,14 @@ import path from 'path'
 import { connect } from 'mongoose'
 import methodOverride from 'method-override'
 import morgan from 'morgan'
+import Joi from 'joi'
 const ejsMate = require('ejs-mate')
 
 import { Campground } from './models/campGround'
-import { CampgroundType } from './types/campground'
+import { CampgroundType, ExpressErrorType } from './types/campground'
 import { catchAsync } from './utils/catchAsync'
+import { ExpressError } from './utils/ExpressError'
+import { campgroundsSchema } from './shema'
 
 connect('mongodb://localhost:27017/yelp-camp', {
   useNewUrlParser: true,
@@ -16,7 +19,6 @@ connect('mongodb://localhost:27017/yelp-camp', {
 })
   .then(() => {
     console.log('MongoDBコネクションOK！！')
-    // スキーマの定義などthenの中で書かなくても書かなくても良い仕様になっている
   })
   .catch((err: Error) => {
     console.log('MongoDBコネクションエラー')
@@ -35,6 +37,20 @@ app.use(methodOverride('_method'))
 // 通信のログを出力
 app.use(morgan('tiny'))
 
+// サーバーサイドバリデーション
+const validateCampground = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { error } = campgroundsSchema.validate(req.body)
+  if (error?.details[0].message) {
+    throw new ExpressError(error.details[0].message, 400)
+  } else {
+    next()
+  }
+}
+
 // 一覧
 app.get(
   '/campgrounds',
@@ -50,6 +66,7 @@ app.get('/campgrounds/new', (req: Request, res: Response) => {
 })
 app.post(
   '/campgrounds',
+  validateCampground,
   catchAsync(async (req: Request, res: Response) => {
     const getCampground = (req.body as { campground: Partial<CampgroundType> })
       .campground
@@ -71,6 +88,7 @@ app.get(
 )
 app.put(
   '/campgrounds/:id',
+  validateCampground,
   catchAsync(async (req: Request, res: Response) => {
     const campground = await Campground.findByIdAndUpdate(
       (req.params as { id: string }).id,
@@ -99,10 +117,19 @@ app.get(
   })
 )
 
-// エラーハンドル
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.send('問題が起きました。')
+// エラーハンドラー
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
+  next(new ExpressError('ページが見つかりませんでした。', 404))
 })
+app.use(
+  (err: ExpressErrorType, req: Request, res: Response, next: NextFunction) => {
+    const { statusCode = 500 } = err
+    if (!err.message) {
+      err.message = '問題が起きました。'
+    }
+    res.status(statusCode).render('campgrounds/error', { err })
+  }
+)
 
 app.listen(3000, () => {
   console.log('ポート3000で待ち受け中...')
